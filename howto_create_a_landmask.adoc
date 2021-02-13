@@ -1,0 +1,184 @@
+= How to create a landmask for use with LIS
+
+== Overview
+// TODO: Need better intro. Mention forcing/landmask somewhere in title?
+
+LIS will halt if the selected forcing data source does not align with the landmask used. An error message similar to the one below will be present in in one of the log files:
+
+[source, shell]
+----
+undefined value found for forcing variable tair in NoahMP401
+ for tile            1 latitude =    30.23500     longitude =   -88.26501
+ [ERR] endrun is being called
+----
+
+This error message indicates that forcing data are not present for at least one grid point identified as land in the selected landmask. This mismatch tends to occur along coastlines and/or for island points.
+
+// TODO: Link to LIS User\'s Guide
+One solution to this error is to use a global surface forcing dataset in addition to your selected forcing with the "overlay" option (see the LIS User\'s Guide). The global forcing data will be used wherever the initial forcing is missing. This is a simple solution, but it may slow down the run because LIS has to read two different forcings.
+
+The other solution, described here, is to generate a landmask from the forcing dataset itself.
+
+[IMPORTANT]
+====
+This tutorial assumes you have already used LDT to generate the LIS paramater input file for your domain of interest (e.g., _lis_input.d01.nc_).
+====
+
+== Step 1: Run LIS to Output One Forcing Field
+
+In this step we will modify LIS configuration files to output only a single forcing variable over the domain of interest.
+
+. Copy your model output attributes file (e.g., _MODEL_OUTPUT_LIST.TBL.full_) to a new file (e.g., _MODEL_OUTPUT_LIST.TBL.forc_).
++
+In the copy, disable all variable output except for a single forcing variable (such as air temperature):
++
+[source, text]
+----
+#Forcings
+Wind_f:       0  m/s     -    1 0 0 1  32 10      # Near surface wind (m/s)
+Rainf_f:      0  kg/m2s  DN   1 0 0 1 162 1000    # Average rainfall rate
+Snowf_f:      0  kg/m2s  DN   1 0 0 1 161 1000    # Average snowfall rate
+CRainf_f:     0  kg/m2s  DN   1 0 0 1  63 1000    # Average convective rainfall rate
+Tair_f:       1  K       -    1 0 0 1  11 10      # Near surface air temperature <1>
+Qair_f:       0  kg/kg   -    1 0 0 1  51 1000    # Near surface specific humidity
+Psurf_f:      0  Pa      -    1 0 0 1   1 10      # Surface pressure
+SWdown_f:     0  W/m2    DN   1 0 0 1 204 10      # Surface incident shortwave radiation
+LWdown_f:     0  W/m2    DN   1 0 0 1 205 10      # Surface incident longwave radiation
+PARDR_f:      0  W/m2    DN   1 0 0 1 256 10      # Surface incident PAR direct
+PARDF_f:      0  W/m2    DN   1 0 0 1 256 10      # Surface incident PAR diffuse
+----
+<1> `Tair_f` is the only forcing variable enabled for output as indicated by the `1` in the second column.
+
+. Copy your existing _lis.config_ file to a new file (e.g., _lis.config_forc_).
++
+In the copy, change the `Model output attributes file:` setting to point to the file created above:
++
+[source, yaml]
+----
+Model output attributes file:           './tables/MODEL_OUTPUT_LIST.TBL.forc'
+----
++
+Change the `Land surface model:` to `none` to select the template LSM:
++
+[source, yaml]
+----
+Land surface model:         none
+----
++
+And add the following line:
++
+[source, yaml]
+----
+TEMPLATE model timestep:    1hr
+----
++
+LIS only needs to run for a single, 1-hour timestep. Modify the ending date and time for the run so that it is 1 hour after the start time. For example:
++
+[source, yaml]
+----
+Starting year:                          2000
+Starting month:                            1
+Starting day:                              1
+Starting hour:                             0
+Starting minute:                           0
+Starting second:                           0
+Ending year:                            2000
+Ending month:                              1
+Ending day:                                1
+Ending hour:                               1
+Ending minute:                             0
+Ending second:                             0
+----
++
+Finally, change the output and log locations to avoid overwriting any existing files:
++
+[source, yaml]
+----
+Output directory:           OUTPUT_FORCING/
+Diagnostic output file:     OUTPUT_FORCING/logs/lislog
+----
+
+Run LIS using the modified copy of your configuration file. This will generate an output file containing only air temperature forcing data that will be used to create the mask file.
+
+== Step 2: Generate the mask file
+
+For this step you will need a few values handy: the latitude and longitude of the lower left corner of the domain, the domain resolution, and the number of grid points in the x- and y-dimensions in the domain.
+
+The coordinate and resolution values can be found in your _ldt.config_ file:
+
+[source, shell]
+----
+Run domain lower left lat:                 29.005
+Run domain lower left lon:                -90.995
+Run domain upper right lat:               30.595
+Run domain upper right lon:              -88.005
+Run domain resolution (dx):                0.01
+Run domain resolution (dy):                0.01
+----
+
+The number of grid points in the x- and y-dimensions can be found in the header of a LIS log file (e.g., _OUTPUT_FORCING/logs/lislog.0000_):
+
+[source,shell]
+----
+[INFO] DOMAIN details:
+[INFO] local domain:(          43          40 )
+[INFO] local domain without halo:(          43          40 )
+[INFO] running domain:(         300         160 ) <1>
+----
+<1> Grid points along the x- and y-dimensions, respectively.
+
+Follow the steps in the section below that matches the output filetype used in your LIS run.
+
+=== Sequential Binary Output (_.gs4r_ files)
+
+
+
+. Compile the _make_mask_binary_ from the appropriate F90 file for your compiler:
++
+.Intel Fortran compiler:
+[source, shell]
+----
+ifort -o make_mask_binary make_mask_binary_IFORT.F90
+----
++
+.GFortran compiler:
+[source, shell]
+----
+gfortran -o make_mask_binary make_mask_binary_GNU.F90
+----
+
+. Run the resulting executable:
++
+[source, shell]
+----
+./make_mask_binary OUTPUT_FORCING/SURFACEMODEL/200001/LIS_HIST_200001010100.d01.gs4r 300 160
+----
++
+The program takes three arguments:
++
+[arabic]
+.. The relative path to the input file
+.. # columns (XPTS)
+.. # rows (YPTS)
++
+
+
+The landmask will be written to a file named _forcing_mask.1gd4r_. Jump to Step 3.
+
+=== NetCDF Output
+
+First, create a GrADS control file to read the output of the LIS run. For example:
+
+.Contents of _lis_output.xdf_
+[source, text]
+----
+DSET        ^OUTPUT_FORCING/SURFACEMODEL/%y4%m2/LIS_HIST_%y4%m2%d2%h2%n2.d01.nc
+TITLE        Forcing only output
+DTYPE        netcdf
+UNDEF        -9999.0
+OPTIONS      template
+XDEF east_west     300 LINEAR        -90.995     0.01
+YDEF north_south   160 LINEAR         29.005     0.01
+TDEF time           24 LINEAR  01Z01jan2000     1hr
+----
+
