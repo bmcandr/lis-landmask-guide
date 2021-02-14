@@ -246,7 +246,10 @@ If successful, the landmask will be present in a file named _forcing_mask.1gd4r_
 
 === NetCDF Output
 
+[IMPORTANT]
+====
 GrADS is required to generate a landmask file from NetCDF output.
+====
 
 Copy _lis_output.xdf_ and _make_mask_netcdf.gs_ from the _{netcdf-dir}_ directory into the LIS run directory.
 
