@@ -1,0 +1,8 @@
+DSET        ^OUTPUT_FORCING/SURFACEMODEL/%y4%m2/LIS_HIST_%y4%m2%d2%h2%n2.d01.nc
+TITLE        Forcing only output
+DTYPE        netcdf
+UNDEF        -9999.0
+OPTIONS      template
+XDEF east_west     300 LINEAR        -90.995     0.01
+YDEF north_south   160 LINEAR         29.005     0.01
+TDEF time           24 LINEAR  01Z01jan2000     1hr
