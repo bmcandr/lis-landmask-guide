@@ -250,7 +250,7 @@ $ grads -lc "run make_mask_netcdf.gs"
 
 If successful, the landmask will be present in a file named _forcing_mask.1gd4r_. Quit GrADS and jump to <<step-3, Step 3>>.
 
-=== Visualize the Landmask
+=== Plot the Landmask (optional)
 
 GrADS control files named _forcing_mask.ctl_ are provided for visualizing the landmask file. Copy the file to your LIS run directory and modify the `XDEF` and `YDEF` fields as above. Use GrADS to view the file:
 
@@ -290,4 +290,3 @@ Run LDT with the modified config file to generate a LIS parameter file based on 
 == Conclusion
 
 LIS should now run without error using the selected forcing data.
-
