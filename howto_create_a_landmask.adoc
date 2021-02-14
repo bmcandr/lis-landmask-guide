@@ -4,6 +4,11 @@
 :source-highlighter: highlight.js
 
 :url-lis-docs: link:https://github.com/NASA-LIS/LISF/tree/master/docs[LISF Documentation]
+
+:landmask-github: bmcandr/lis-landmask-guide
+:landmask-clone-https: https://github.com/{landmask-github}
+:landmask-clone-ssh: git@github.com:{landmask-github}
+
 :scripts-dir: scripts
 :netcdf-dir: {scripts-dir}/netcdf/
 :binary-grads-dir: {scripts-dir}/binary/grads/
@@ -137,6 +142,25 @@ The number of grid points in the x- and y-directions can be found in the header 
 [INFO] running domain:(        300         160 ) <1>
 ----
 <1> Grid points along the x- and y-dimensions, respectively.
+
+---
+
+// TODO update this section if this guide is included in the LISF repo
+=== Clone this Repo
+
+Clone this repository:
+
+.HTTPS clone
+[source, shell, subs="attributes"]
+----
+$ git clone {landmask-clone-https}
+----
+
+.SSH clone
+[source, shell, subs="attributes"]
+----
+$ git clone {landmask-clone-ssh}
+----
 
 ---
 
