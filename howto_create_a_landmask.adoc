@@ -149,7 +149,7 @@ Jump to the section that matches your LIS output file format:
 
 === Sequential Binary Output (_.gs4r_ files)
 
-The landmask can be generated using either <<Fortran>> or <<GrADS>>.
+The landmask can be generated from binary output using either <<Fortran>> or <<GrADS>>.
 
 ==== Fortran
 
