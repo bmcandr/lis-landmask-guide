@@ -116,7 +116,7 @@ Diagnostic output file:     OUTPUT_FORCING/logs/lislog
 
 Run LIS using the _lis.config_forc_ file to generate an output file containing the air temperature forcing data. This output will be used to generate the mask file.
 
-== Generate the landmask file
+== Generate the Landmask File
 
 For this step you will need a few domain parameters handy: the latitude and longitude of the lower left corner, the resolution, and the number of grid points in the x- and y-directions.
 
@@ -284,8 +284,8 @@ GrADS control files named _forcing_mask.ctl_ are provided for visualizing the la
 [source, shell]
 ----
 $ grads -lc "open forcing_mask.ctl"
-gs> set gxout grfill
-gs> d mask
+ga-> set gxout grfill
+ga-> d mask
 ----
 
 // TODO: add figure of landmask
