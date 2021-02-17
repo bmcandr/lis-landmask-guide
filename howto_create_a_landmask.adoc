@@ -293,7 +293,7 @@ ga-> d mask
 [[step-3]]
 == Generate a LIS Input File based on the Landmask
 
-To read in the landmask file generated in the previous step add the following lines to your original LDT configuration file, modifying the regional mask fields to match the LIS domain parameters:
+Add the following lines to your original LDT configuration file to read in the landmask file generated in the previous step, modifying the regional mask `lat`, `lon`, and `resolution` fields to match the LIS domain parameters:
 
 [source, text]
 ----
