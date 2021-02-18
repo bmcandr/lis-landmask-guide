@@ -50,7 +50,7 @@
 
       ! read the input file
       open(98,file=trim(infile),   &
-              access='stream',convert="big_endian",                    &
+              convert="big_endian",                    &
               form="unformatted",status="old")
       read(98) in_data
       close(98)
@@ -71,7 +71,7 @@
       open(99,file=trim(outfile),                                   &
               access='stream',convert="big_endian",                        &
               form="unformatted",status="unknown")
-      write(99,rec=1) out_data
+      write(99) out_data
       close(99)
 
       stop
