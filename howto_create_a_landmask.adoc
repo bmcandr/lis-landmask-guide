@@ -7,7 +7,7 @@
 
 :landmask-github: bmcandr/lis-landmask-guide
 :landmask-clone-https: https://github.com/{landmask-github}
-:landmask-clone-ssh: git@github.com:{landmask-github}
+:landmask-clone-ssh: github.com:{landmask-github}
 
 :scripts-dir: scripts
 :netcdf-dir: {scripts-dir}/netcdf/
@@ -149,12 +149,6 @@ The number of grid points in the x- and y-directions can be found in the header 
 === Clone this Repo
 
 Clone this repository:
-
-.HTTPS clone
-[source, shell, subs="attributes"]
-----
-$ git clone {landmask-clone-https}
-----
 
 .SSH clone
 [source, shell, subs="attributes"]
