@@ -197,9 +197,9 @@ $ ./make_mask_binary OUTPUT_FORCING/SURFACEMODEL/200001/LIS_HIST_200001010100.d0
 The program takes three arguments:
 
 [arabic]
-. The relative path to the input file
-. # grid points in the x-direction
-. # grid points in the y-direction
+. The relative path to the binary LIS output file containing the single forcing field.
+. The number of grid points in the x-direction.
+. The number of grid points in the y-direction.
 
 The landmask will be written to a file named _forcing_mask.1gd4r_. Jump to <<step-3, Step 3>>.
 
