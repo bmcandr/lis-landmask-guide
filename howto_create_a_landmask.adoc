@@ -141,7 +141,7 @@ The number of grid points in the x- and y-directions can be found in the header 
 [INFO] local domain without halo:(          43          40 )
 [INFO] running domain:(        300         160 ) <1>
 ----
-<1> Grid points along the x- and y-dimensions, respectively.
+<1> The running domain lists the number of grid points along the x- and y-dimensions, respectively.
 
 ---
 
